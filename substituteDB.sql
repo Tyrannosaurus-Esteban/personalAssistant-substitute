@@ -46,3 +46,36 @@ CREATE TABLE IF NOT EXISTS school
     REFERENCES district(district_ID)
 );
 
+-- NOT NORMALIZED ENOUGH, PLUS NEED CATEGORIES LIKE DUAL LANGUAGE BOOLEAN
+-- I THINK GRADE SHOULD BE IN ITS OWN TABLE
+
+CREATE TABLE IF NOT EXISTS teacher
+(
+	teacher_ID			INT			PRIMARY KEY		NOT NULL	AUTO_INCREMENT,
+    first_name			VARCHAR(25),
+    last_name			VARCHAR(25),
+    -- Grade should have its own table in order to further normalize,
+    -- Will keep this way to get a functional database for now.
+    grade				VARCHAR(25),
+    roving				BOOL		NOT NULL, 
+    school_ID			INT,
+	CONSTRAINT teacher_fk_school FOREIGN KEY (school_ID)
+    REFERENCES school(school_ID)
+);
+
+-- WHERE SHOULD ASSIGNMENT LINK TO THE SCHOOL SYSTEM, PROBABLY 
+-- SCHOOL, MAYBE TO TEACHER BUT NEED DATES TO MATCH TEACHERS 
+-- TO GRADES AND SCHOOL, CAN EASILY CHANGE OVER TIME
+-- ALSO ADD SUSTITUTE ID LATER ON, BUT FOR NOW THIS IS FOR MY
+-- PERSONAL USE.
+
+CREATE TABLE IF NOT EXISTS assignment
+(
+	assignment_ID		INT			PRIMARY KEY		NOT NULL	AUTO_INCREMENT,
+	assignment_date		DATE		NOT NULL,
+    cancelled			BOOL 		NOT NULL,
+    teacher_ID			INT 		NOT NULL,
+    CONSTRAINT assignment_fk_teacher FOREIGN KEY (teacher_ID)
+    REFERENCES teacher(teacher_ID)
+);
+
